@@ -1378,8 +1378,9 @@ export class OAuthService extends AuthConfig implements OnDestroy {
     protected storeAdditionalParameters(tokenResponse) {
         const additionalParams = JSON.parse(this._storage.getItem('additional_params')) || {};
   
-        const tokenKeys = ['access_token', 'refresh_token', 'expires_in', 'scope'];
-        Object.keys(tokenResponse).forEach(key => {
+        const tokenKeys: Array<string> = ['access_token', 'refresh_token', 'expires_in', 'scope'];
+        
+        Object.keys(tokenResponse).forEach((key: string) => {
           if (!tokenKeys.includes(key)) { // don't store parameters related to token, stored elsewhere
             additionalParams[key] = tokenResponse[key];
           }
@@ -1970,7 +1971,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
 
     /**
      * Get additional parameters that have been saved after a log in
-     * @returns {object} key:value pairs of additional parameters from oAuth login
+     * @returns key:value pairs of additional parameters from oAuth login
      */
     public getAdditionalParameters(): object {
         if (!this._storage.getItem('additional_params')) {
