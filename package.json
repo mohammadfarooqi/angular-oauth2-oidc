@@ -1,11 +1,10 @@
 {
-  "name": "angular-oauth2-oidc-starter-smile-cdr",
+  "name": "starter",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --project sample -o",
-    "prepare": "npm run build",
     "build": "ng build --prod --project lib && npm run copy:readme && npm run docs",
     "test": "ng test",
     "lint": "ng lint",
