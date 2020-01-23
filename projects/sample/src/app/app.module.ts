@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -14,7 +14,7 @@ import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   imports: [
-    BrowserModule,
+    // BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
