@@ -720,6 +720,8 @@ export class OAuthService extends AuthConfig implements OnDestroy {
                             tokenResponse.scope
                         );
 
+                        this.storeAdditionalParameters(tokenResponse);
+
                         this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
                         resolve(tokenResponse);
                     },
@@ -792,6 +794,8 @@ export class OAuthService extends AuthConfig implements OnDestroy {
                             tokenResponse.expires_in,
                             tokenResponse.scope
                         );
+
+                        this.storeAdditionalParameters(tokenResponse);
 
                         this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
                         this.eventsSubject.next(new OAuthSuccessEvent('token_refreshed'));
@@ -1368,6 +1372,23 @@ export class OAuthService extends AuthConfig implements OnDestroy {
     }
 
     /**
+     * Store additional parameters received in the tokenResponse
+     * @param tokenResponse the parameters from the token post request
+     */
+    protected storeAdditionalParameters(tokenResponse) {
+        const additionalParams = JSON.parse(this._storage.getItem('additional_params')) || {};
+  
+        const tokenKeys = ['access_token', 'refresh_token', 'expires_in', 'scope'];
+        Object.keys(tokenResponse).forEach(key => {
+          if (!tokenKeys.includes(key)) { // don't store parameters related to token, stored elsewhere
+            additionalParams[key] = tokenResponse[key];
+          }
+        });
+  
+        this._storage.setItem('additional_params', JSON.stringify(additionalParams));
+    }
+
+    /**
      * Delegates to tryLoginImplicitFlow for the sake of competability
      * @param options Optional options.
      */
@@ -1507,6 +1528,8 @@ export class OAuthService extends AuthConfig implements OnDestroy {
                         tokenResponse.refresh_token, 
                         tokenResponse.expires_in,
                         tokenResponse.scope);
+
+                    this.storeAdditionalParameters(tokenResponse);
 
                     if (this.oidc && tokenResponse.id_token) {
                         this.processIdToken(tokenResponse.id_token, tokenResponse.access_token).  
@@ -1943,6 +1966,17 @@ export class OAuthService extends AuthConfig implements OnDestroy {
         }
 
         return parseInt(this._storage.getItem('id_token_expires_at'), 10);
+    }
+
+    /**
+     * Get additional parameters that have been saved after a log in
+     * @returns {object} key:value pairs of additional parameters from oAuth login
+     */
+    public getAdditionalParameters(): object {
+        if (!this._storage.getItem('additional_params')) {
+          return null;
+        }
+        return JSON.parse(this._storage.getItem('additional_params'));
     }
 
     /**
